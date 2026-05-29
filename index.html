@@ -44,12 +44,12 @@
 
             <div style="margin-top: 25px; width: 100%;">
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="login-username" class="input-field" placeholder="Masukkan username Anda..." autocomplete="off">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="input-field" placeholder="Masukkan username..." autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-password" class="input-field" placeholder="Masukkan password Anda...">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="Masukkan password...">
                 </div>
                 <button type="button" class="btn-primary" onclick="loginSistem()">MASUK</button>
             </div>
@@ -69,7 +69,7 @@
             <hr style="border: 0; height: 1px; background: #e2e8f0; margin-bottom: 20px; width: 100%;">
 
             <div class="form-group">
-                <label>Menu Kelas</label>
+                <label for="menu-kelas">Menu Kelas</label>
                 <select id="menu-kelas" class="input-field">
                     <option value="">-- Pilih Kelas --</option>
                     <optgroup label="Kelas X">
@@ -84,32 +84,26 @@
             </div>
             
             <div class="form-group">
-                <label>Menu Nama Siswa</label>
+                <label for="menu-nama">Menu Nama Siswa</label>
                 <input type="text" id="menu-nama" class="input-field" placeholder="Masukkan nama lengkap siswa...">
             </div>
 
             <div class="form-group">
-                <label>Menu Mata Pelajaran</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label for="menu-mapel" style="margin-bottom: 0;">Menu Mata Pelajaran</label>
+                    <span onclick="tambahMapelKustom()" style="font-size: 11px; color: #2563eb; font-weight: bold; cursor: pointer; text-decoration: underline;">+ Tambah Mapel</span>
+                </div>
                 <select id="menu-mapel" class="input-field">
-                    <option value="">-- Pilih Mata Pelajaran --</option>
-                    <option>Matematika</option>
-                    <option>Bahasa Indonesia</option>
-                    <option>Bahasa Inggris</option>
-                    <option>Fisika</option>
-                    <option>Kimia</option>
-                    <option>Biologi</option>
-                    <option>Sejarah</option>
-                    <option>Ekonomi</option>
-                </select>
+                    </select>
             </div>
 
             <div class="form-group">
-                <label>Menu Nilai</label>
+                <label for="menu-nilai">Menu Nilai</label>
                 <input type="number" id="menu-nilai" class="input-field" placeholder="Masukkan rentang nilai (0-100)..." min="0" max="100">
             </div>
 
             <div class="form-group">
-                <label>Menu Pengguna (Petugas/Role)</label>
+                <label for="menu-pengguna">Menu Pengguna (Petugas/Role)</label>
                 <input type="text" id="menu-pengguna" class="input-field" readonly style="background: #e2e8f0; color: #475569; font-weight: 600;">
             </div>
 
