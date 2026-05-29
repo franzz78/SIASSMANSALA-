@@ -1,9 +1,6 @@
 let dbSiassmansala = JSON.parse(localStorage.getItem('siassmansala_data')) || [];
 let loggedInUser = ""; 
 
-// ==========================================================================
-// 1. FUNGSI NAVIGASI INTERAL PANEL
-// ==========================================================================
 function switchPanel(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     
@@ -22,9 +19,6 @@ function switchPanel(id) {
     }
 }
 
-// ==========================================================================
-// 2. FUNGSI LOGIN UTAMA (Sesuai Kredensial Baru Anda)
-// ==========================================================================
 function loginSistem() {
     const userVal = document.getElementById('login-username').value.trim();
     const passVal = document.getElementById('login-password').value;
@@ -34,7 +28,7 @@ function loginSistem() {
         return;
     }
 
-    // VALIDASI KREDENSIAL BARU
+    // Menggunakan akun resmi mutlak pilihan Anda
     if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
         loggedInUser = userVal; 
         
@@ -47,7 +41,6 @@ function loginSistem() {
         }).then(() => {
             switchPanel('panel-menu');
 
-            // Isi kolom Menu Pengguna secara otomatis
             const fieldUser = document.getElementById('menu-pengguna');
             if (fieldUser) {
                 fieldUser.value = loggedInUser;
@@ -58,9 +51,6 @@ function loginSistem() {
     }
 }
 
-// ==========================================================================
-// 3. FUNGSI SIMPAN DATA (5 MENU UTAMA)
-// ==========================================================================
 function simpanDataSistem() {
     const kelas = document.getElementById('menu-kelas').value;
     const nama = document.getElementById('menu-nama').value.trim();
@@ -103,9 +93,6 @@ function simpanDataSistem() {
     });
 }
 
-// ==========================================================================
-// 4. FUNGSI KELUAR / LOGOUT
-// ==========================================================================
 function logoutSistem() {
     Swal.fire({
         title: 'Keluar Aplikasi?',
