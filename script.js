@@ -1,6 +1,91 @@
 let dbSiassmansala = JSON.parse(localStorage.getItem('siassmansala_data')) || [];
 let loggedInUser = ""; 
 
+// Daftar Mata Pelajaran Default sesuai permintaan Anda
+const mapelDefault = [
+    "Bahasa Indonesia",
+    "Bahasa Sunda",
+    "Bahasa Inggris",
+    "Matematika",
+    "Informatika",
+    "Biologi",
+    "Fisika",
+    "Sejarah",
+    "Ekonomi",
+    "PKWU"
+];
+
+// Ambil daftar mapel kustom dari localStorage jika ada, kalau tidak gunakan default
+let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelDefault;
+
+// Jalankan fungsi memuat data pilihan mapel saat aplikasi pertama kali dibuka
+document.addEventListener("DOMContentLoaded", () => {
+    muatPilihanMapel();
+});
+
+// Fungsi untuk memasukkan array mapel ke elemen select HTML
+function muatPilihanMapel() {
+    const selectMapel = document.getElementById('menu-mapel');
+    if (!selectMapel) return;
+
+    // Bersihkan isi sebelumnya, buat placeholder awal
+    selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+
+    // Loop data mapel ke dalam tag option
+    listMapelSistem.forEach(mapel => {
+        const option = document.createElement('option');
+        option.value = mapel;
+        option.textContent = mapel;
+        selectMapel.appendChild(option);
+    });
+}
+
+// Fungsi untuk menambah Mata Pelajaran baru sendiri langsung dari layar aplikasi
+function tambahMapelKustom() {
+    Swal.fire({
+        title: 'Tambah Mapel Baru',
+        input: 'text',
+        inputPlaceholder: 'Tulis nama mata pelajaran baru...',
+        showCancelButton: true,
+        confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Tambahkan',
+        cancelButtonText: 'Batal',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Nama mata pelajaran tidak boleh kosong!';
+            }
+            // Mencegah duplikasi nama mapel yang sama
+            if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) {
+                return 'Mata pelajaran ini sudah terdaftar di sistem!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const namaMapelBaru = result.value.trim();
+            
+            // Masukkan ke array sistem dan amankan ke localStorage
+            listMapelSistem.push(namaMapelBaru);
+            localStorage.setItem('siassmansala_mapel', JSON.stringify(listMapelSistem));
+            
+            // Refresh ulang isi dropdown select
+            muatPilihanMapel();
+            
+            // Set otomatis pilihan dropdown ke mapel baru tersebut
+            document.getElementById('menu-mapel').value = namaMapelBaru;
+
+            Swal.fire({
+                title: 'Berhasil!',
+                text: `Mapel "${namaMapelBaru}" telah ditambahkan ke menu pilihan.`,
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+// Fungsi navigasi dengan efek transisi animasi bergerak
 function switchPanel(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     
@@ -19,24 +104,30 @@ function switchPanel(id) {
     }
 }
 
+// Fungsi eksekusi login SIASSMANSALA
 function loginSistem() {
-    const userVal = document.getElementById('login-username').value.trim();
-    const passVal = document.getElementById('login-password').value;
+    const userField = document.getElementById('login-username');
+    const passField = document.getElementById('login-password');
+
+    if (!userField || !passField) return;
+
+    const userVal = userField.value.trim();
+    const passVal = passField.value;
 
     if (!userVal || !passVal) {
         Swal.fire('Perhatian', 'Silakan isi kolom Username dan Password!', 'warning');
         return;
     }
 
-    // Menggunakan akun resmi mutlak pilihan Anda
-    if (userVal === 'AdminSMANSALA' && passVal === 'SIAS2627##') {
+    // PENGECEKAN KREDENSIAL AKUN UTAMA
+    if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
         loggedInUser = userVal; 
         
         Swal.fire({
             title: 'Berhasil Masuk!',
             text: `Selamat datang kembali, ${loggedInUser}`,
             icon: 'success',
-            timer: 1300,
+            timer: 1100,
             showConfirmButton: false
         }).then(() => {
             switchPanel('panel-menu');
@@ -47,10 +138,11 @@ function loginSistem() {
             }
         });
     } else {
-        Swal.fire('Gagal Masuk', 'Username atau Password yang Anda masukkan salah!', 'error');
+        Swal.fire('Gagal Masuk', 'Username atau Password salah!', 'error');
     }
 }
 
+// Fungsi Simpan Formulir 5 Menu Utama
 function simpanDataSistem() {
     const kelas = document.getElementById('menu-kelas').value;
     const nama = document.getElementById('menu-nama').value.trim();
@@ -93,6 +185,7 @@ function simpanDataSistem() {
     });
 }
 
+// Fungsi Log Out Sistem
 function logoutSistem() {
     Swal.fire({
         title: 'Keluar Aplikasi?',
