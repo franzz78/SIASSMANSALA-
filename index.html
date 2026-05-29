@@ -28,11 +28,11 @@
                      style="width: 85px; height: auto; margin-bottom: 15px;">
                 
                 <header style="text-align: center;">
-                    <h1 class="portal-title" style="font-size: 24px; margin: 0;">SIASSMANSALA</h1>
+                    <h1 class="portal-title">SIASSMANSALA</h1>
                 </header>
             </div>
             
-            <div class="instansi-box" style="text-align: center;">
+            <div class="instansi-box">
                 <div class="instansi-main">SMAN 1 LEMAHABANG</div>
                 <div class="instansi-sub">KABUPATEN CIREBON</div>
                 
@@ -52,7 +52,7 @@
                     <label>Password</label>
                     <input type="password" id="login-password" class="input-field" placeholder="Masukkan password Anda...">
                 </div>
-                <button class="btn-primary" onclick="loginSistem()" style="margin-top: 15px; width: 100%;">MASUK</button>
+                <button type="button" class="btn-primary" onclick="loginSistem()" style="margin-top: 15px; width: 100%;">MASUK</button>
             </div>
         </div>
 
@@ -114,12 +114,11 @@
                 <input type="text" id="menu-pengguna" class="input-field" readonly style="background: #e2e8f0; color: #475569; font-weight: 600;">
             </div>
 
-            <button class="btn-primary" onclick="simpanDataSistem()" style="margin-top: 20px;">SIMPAN DATA</button>
-            <button class="btn-text" onclick="logoutSistem()">Keluar / Log Out</button>
+            <button type="button" class="btn-primary" onclick="simpanDataSistem()" style="margin-top: 20px;">SIMPAN DATA</button>
+            <button type="button" class="btn-text" onclick="logoutSistem()">Keluar / Log Out</button>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
