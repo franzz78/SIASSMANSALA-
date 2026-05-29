@@ -1,4 +1,3 @@
-// Database lokal khusus penyimpanan data SIASSMANSALA
 let dbSiassmansala = JSON.parse(localStorage.getItem('siassmansala_data')) || [];
 let loggedInUser = ""; 
 
@@ -16,7 +15,6 @@ function switchPanel(id) {
     const container = document.getElementById('main-container');
     if (!container) return;
 
-    // Lebarkan container otomatis saat masuk ke form 5 menu
     if (id === 'panel-menu') {
         container.classList.add('wide');
     } else {
@@ -25,7 +23,7 @@ function switchPanel(id) {
 }
 
 // ==========================================================================
-// 2. FUNGSI LOGIN UTAMA (Username & Password)
+// 2. FUNGSI LOGIN UTAMA (Sesuai Kredensial Baru Anda)
 // ==========================================================================
 function loginSistem() {
     const userVal = document.getElementById('login-username').value.trim();
@@ -36,9 +34,9 @@ function loginSistem() {
         return;
     }
 
-    // Memakai kunci utama bawaan lama Anda atau password sistem baru
-    if (passVal === 'SMANSALAPERPUS2026##' || passVal === 'SIAS2026##') {
-        loggedInUser = userVal; // Ikat nama pengguna ke sesi global
+    // VALIDASI KREDENSIAL BARU
+    if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
+        loggedInUser = userVal; 
         
         Swal.fire({
             title: 'Berhasil Masuk!',
@@ -49,14 +47,14 @@ function loginSistem() {
         }).then(() => {
             switchPanel('panel-menu');
 
-            // Set kolom Menu Pengguna (readonly) secara otomatis
+            // Isi kolom Menu Pengguna secara otomatis
             const fieldUser = document.getElementById('menu-pengguna');
             if (fieldUser) {
                 fieldUser.value = loggedInUser;
             }
         });
     } else {
-        Swal.fire('Gagal Masuk', 'Password yang Anda masukkan salah!', 'error');
+        Swal.fire('Gagal Masuk', 'Username atau Password yang Anda masukkan salah!', 'error');
     }
 }
 
@@ -70,18 +68,15 @@ function simpanDataSistem() {
     const nilai = document.getElementById('menu-nilai').value.trim();
     const pengguna = document.getElementById('menu-pengguna').value;
 
-    // Validasi kelengkapan bidang input
     if (!kelas || !nama || !mapel || !nilai) {
         return Swal.fire('Data Belum Lengkap', 'Silakan lengkapi seluruh isian formulir menu.', 'warning');
     }
 
-    // Validasi kisaran angka input nilai
     const numNilai = parseFloat(nilai);
     if (isNaN(numNilai) || numNilai < 0 || numNilai > 100) {
         return Swal.fire('Nilai Tidak Valid', 'Isi kolom nilai dengan angka antara 0 - 100.', 'error');
     }
 
-    // Pembuatan objek data berstruktur
     const recordBaru = {
         id: Date.now(),
         kelas: kelas,
@@ -92,7 +87,6 @@ function simpanDataSistem() {
         waktuSimpan: new Date().toLocaleString('id-ID')
     };
 
-    // Eksekusi penyimpanan ke array lokal dan LocalStorage browser
     dbSiassmansala.push(recordBaru);
     localStorage.setItem('siassmansala_data', JSON.stringify(dbSiassmansala));
 
@@ -102,7 +96,6 @@ function simpanDataSistem() {
         icon: 'success',
         confirmButtonColor: '#2563eb'
     }).then(() => {
-        // Bersihkan kolom isian (Kecuali menu pengguna agar tidak perlu login ulang)
         document.getElementById('menu-kelas').value = '';
         document.getElementById('menu-nama').value = '';
         document.getElementById('menu-mapel').value = '';
@@ -125,12 +118,10 @@ function logoutSistem() {
         cancelButtonText: 'Batal'
     }).then((res) => {
         if (res.isConfirmed) {
-            // Pembersihan form login utama
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
             loggedInUser = "";
-
             switchPanel('panel-awal');
         }
     });
-      }
+}
