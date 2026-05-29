@@ -25,21 +25,18 @@ body {
     justify-content: center; 
     align-items: center;
     color: #0f172a;
-    position: relative;
 }
 
-/* Background ditaruh paling belakang agar tidak menutupi klik tombol */
 .glow-bg {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 550px; height: 550px;
     background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
-    z-index: 1; 
+    z-index: -1; 
     pointer-events: none;
 }
 
-/* CONTAINER UTAMA DENGAN Z-INDEX TINGGI */
 .app-container {
     background: var(--card-bg); 
     width: 92%; 
@@ -49,9 +46,9 @@ body {
     padding: 30px; 
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.07);
     border: 1px solid #e2e8f0; 
-    z-index: 999; /* Mutlak berada di depan background */
     position: relative;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto; 
     overscroll-behavior: contain;
 }
@@ -69,12 +66,11 @@ body {
     border-radius: 20px; margin-top: 12px; padding: 8px 12px; border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
-.form-group { margin-bottom: 14px; text-align: left; position: relative; z-index: 1000; }
+.form-group { margin-bottom: 14px; text-align: left; }
 .form-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-.input-field { width: 100%; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; font-size: 14px; font-family: inherit; outline: none; transition: 0.3s; color: #334155; position: relative; z-index: 1001; }
+.input-field { width: 100%; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; font-size: 14px; font-family: inherit; outline: none; transition: 0.3s; color: #334155; }
 .input-field:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
 
-/* GAYA TOMBOL UTAMA */
 button { 
     width: 100%; 
     padding: 14px; 
@@ -83,26 +79,41 @@ button {
     font-weight: 700; 
     font-family: inherit; 
     cursor: pointer; 
-    transition: 0.2s; 
+    transition: all 0.2s ease; 
     font-size: 14px; 
     letter-spacing: 0.5px; 
-    position: relative;
-    z-index: 1002; /* Tombol berada di posisi terdepan agar sensitif klik */
     display: block;
+    position: relative;
+    z-index: 20;
 }
 .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.2); }
 .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(1px); }
+.btn-primary:active { transform: translateY(1px); background: #1e40af; }
 
 .btn-text { background: transparent; color: #64748b; font-size: 13px; margin-top: 12px; font-weight: 600; text-align: center; }
 .btn-text:hover { color: #ef4444; }
 
-.panel { display: none; }
-.panel.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+/* ANIMASI BERGERAK UNTUK HALAMAN SELANJUTNYA */
+.panel { 
+    display: none; 
+    opacity: 0;
+    transform: translateY(20px);
+}
 
-@keyframes slideUp { 
-    from { opacity: 0; transform: translateY(15px); } 
-    to { opacity: 1; transform: translateY(0); } 
+.panel.active { 
+    display: block; 
+    animation: halamanMasuk 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+}
+
+@keyframes halamanMasuk { 
+    0% { 
+        opacity: 0; 
+        transform: translateY(25px) scale(0.96); 
+    } 
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    } 
 }
 
 @media (max-width: 480px) {
