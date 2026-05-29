@@ -1,1 +1,126 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIASSMANSALA | SMAN 1 Lemahabang</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <div class="app-container" id="main-container">
+        
+        <div id="panel-awal" class="panel active">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 20px;">
+                <img src="https://tareqwavlgqoexxffuuc.supabase.co/storage/v1/object/sign/Photo/SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNWIxNTEyZS03YTE5LTQzY2UtYWUxNC00ZmRkNzMyZmIyODMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQaG90by9TTUFOU0FMQS5wbmciLCJpYXQiOjE3Nzg2NTQyNDksImV4cCI6MTgxMDE5MDI0OX0.ckUuob6XAPPIwfqqaqdBP2K27eY2aZ7ZTnWeMNDewVI" 
+                     alt="Logo SMANSALA" 
+                     style="width: 85px; height: auto; margin-bottom: 15px;">
+                
+                <header style="text-align: center;">
+                    <h1 class="portal-title" style="font-size: 24px; margin: 0;">SIASSMANSALA</h1>
+                </header>
+            </div>
+            
+            <div class="instansi-box" style="text-align: center;">
+                <div class="instansi-main">SMAN 1 LEMAHABANG</div>
+                <div class="instansi-sub">KABUPATEN CIREBON</div>
+                
+                <div class="running-text-container">
+                    <marquee style="color: #2563eb; font-size: 11px; font-weight: bold; letter-spacing: 1px;">
+                        -- SMAN 1 LEMAHABANG -- -- LA, BERPRESTASI MENUJU SEKOLAH JUARA -- -- SIASSMANSALA SYSTEM --
+                    </marquee>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; width: 100%;">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" class="input-field" placeholder="Masukkan username Anda...">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="Masukkan password Anda...">
+                </div>
+                <button class="btn-primary" onclick="loginSistem()" style="margin-top: 15px; width: 100%;">MASUK</button>
+            </div>
+        </div>
+
+        <div id="panel-menu" class="panel">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 15px;">
+                <img src="https://tareqwavlgqoexxffuuc.supabase.co/storage/v1/object/sign/Photo/SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNWIxNTEyZS03YTE5LTQzY2UtYWUxNC00ZmRkNzMyZmIyODMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQaG90by9TTUFOU0FMQS5wbmciLCJpYXQiOjE3Nzg2NTQyNDksImV4cCI6MTgxMDE5MDI0OX0.ckUuob6XAPPIwfqqaqdBP2K27eY2aZ7ZTnWeMNDewVI" 
+                     alt="Logo SMANSALA" style="width: 55px; margin-bottom: 10px;">
+                
+                <div style="text-align: center;">
+                    <h2 style="margin: 0; font-size: 18px; font-family: 'Outfit', sans-serif; color: #2563eb; font-weight: 700;">Panel Pengelolaan Data</h2>
+                    <p style="margin: 0; font-size: 12px; color: #64748b;">SMAN 1 LEMAHABANG</p>
+                </div>
+            </div>
+
+            <hr style="border: 0; height: 1px; background: #e2e8f0; margin-bottom: 20px; width: 100%;">
+
+            <div class="form-group">
+                <label>Menu Kelas</label>
+                <select id="menu-kelas" class="input-field">
+                    <option value="">-- Pilih Kelas --</option>
+                    <optgroup label="Kelas X">
+                        <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
+                        <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
+                    </optgroup>
+                    <optgroup label="Kelas XI">
+                        <option>XI.F1</option><option>XI.F2</option><option>XI.F3</option><option>XI.F4</option><option>XI.F5</option>
+                        <option>XI.F6</option><option>XI.F7</option><option>XI.F8</option><option>XI.F9</option><option>XI.F10</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Menu Nama Siswa</label>
+                <input type="text" id="menu-nama" class="input-field" placeholder="Masukkan nama lengkap siswa...">
+            </div>
+
+            <div class="form-group">
+                <label>Menu Mata Pelajaran</label>
+                <select id="menu-mapel" class="input-field">
+                    <option value="">-- Pilih Mata Pelajaran --</option>
+                    <option>Matematika</option>
+                    <option>Bahasa Indonesia</option>
+                    <option>Bahasa Inggris</option>
+                    <option>Fisika</option>
+                    <option>Kimia</option>
+                    <option>Biologi</option>
+                    <option>Sejarah</option>
+                    <option>Ekonomi</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Menu Nilai</label>
+                <input type="number" id="menu-nilai" class="input-field" placeholder="Masukkan rentang nilai (0-100)..." min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label>Menu Pengguna (Petugas/Role)</label>
+                <input type="text" id="menu-pengguna" class="input-field" readonly style="background: #e2e8f0; color: #475569; font-weight: 600;">
+            </div>
+
+            <button class="btn-primary" onclick="simpanDataSistem()" style="margin-top: 20px;">SIMPAN DATA</button>
+            <button class="btn-text" onclick="logoutSistem()">Keluar / Log Out</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
