@@ -29,7 +29,7 @@ function loginSistem() {
     }
 
     // Menggunakan akun resmi mutlak pilihan Anda
-    if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
+    if (userVal === 'AdminSMANSALA' && passVal === 'SIAS2627##') {
         loggedInUser = userVal; 
         
         Swal.fire({
