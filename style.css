@@ -1,1 +1,82 @@
+:root { 
+    --primary: #2563eb; 
+    --bg-page: #ffffff; 
+    --card-bg: #ffffff;
+}
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow-x: hidden; color: #0f172a;
+}
+
+/* efek ambient cahaya di belakang card */
+.glow-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* CARD LAYOUT UTAMA */
+.app-container {
+    background: var(--card-bg); 
+    width: 92%; 
+    max-width: 420px;
+    border-radius: 28px; 
+    padding: 35px; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.07);
+    border: 1px solid #e2e8f0; 
+    z-index: 10; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ketika berganti panel input, container otomatis melebar proporsional */
+.app-container.wide { max-width: 480px; }
+
+.portal-title { font-family: 'Outfit', sans-serif; font-size: 28px; text-align: center; color: var(--primary); font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
+.instansi-box { text-align: center; margin-bottom: 25px; }
+.instansi-main { font-weight: 700; font-size: 14px; color: #1e293b; }
+.instansi-sub { font-size: 11px; color: #64748b; letter-spacing: 1.5px; margin-top: 2px; }
+
+/* RUNNING TEXT */
+.running-text-container {
+    width: 100%; overflow: hidden; background: rgba(37, 99, 235, 0.06);
+    border-radius: 20px; margin-top: 15px; padding: 8px 12px; border: 1px solid rgba(37, 99, 235, 0.1);
+}
+
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.input-field { width: 100%; padding: 13px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; font-size: 14px; font-family: inherit; outline: none; transition: 0.3s; color: #334155; }
+.input-field:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+/* BUTTONS STYLE */
+button { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 700; font-family: inherit; cursor: pointer; transition: 0.2s; font-size: 14px; letter-spacing: 0.5px; }
+.btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.2); }
+.btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-text { background: transparent; color: #64748b; font-size: 13px; margin-top: 15px; font-weight: 600; display: inline-block; width: 100%; text-align: center; }
+.btn-text:hover { color: #ef4444; }
+
+/* NAVIGASI INTERAL PANEL */
+.panel { display: none; }
+.panel.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes slideUp { 
+    from { opacity: 0; transform: translateY(15px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+@media (max-width: 480px) {
+    .app-container { padding: 25px 20px; }
+}
