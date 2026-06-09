@@ -1,8 +1,16 @@
-let dbSiassmansala = JSON.parse(localStorage.getItem('siassmansala_data')) || [];
+// ==========================================
+// KONFIGURASI KONEKSI DATABASE SUPABASE (SUDAH TERHUBUNG)
+// ==========================================
+const SUPABASE_URL = "https://jtvfacdloqykdlbiariy.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0dmZhY2Rsb3F5a2RsYmlhcml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzgzNTcsImV4cCI6MjA5NjUxNDM1N30.Q-zNIS0tki5Tn37P8R6u-LPTkOCnE2r5jllMj922N2k";
+
+// MenginisialisASI Client Supabase
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let loggedInUser = ""; 
 
-// Daftar Mata Pelajaran Default sesuai permintaan Anda
-const mapelDefault = [
+// List 10 Mata Pelajaran Wajib Sesuai Permintaan Anda
+const mapelWajibDefault = [
     "Bahasa Indonesia",
     "Bahasa Sunda",
     "Bahasa Inggris",
@@ -12,30 +20,24 @@ const mapelDefault = [
     "Fisika",
     "Sejarah",
     "Ekonomi",
-    "PKWU",
-    "KIMIA",
-    "GEOGRAFI",
-    "SOSIOLOGI",
-    "MATEMATIKA TL",
+    "PKWU"
 ];
 
-// Ambil daftar mapel kustom dari localStorage jika ada, kalau tidak gunakan default
-let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelDefault;
+// Ambil data mapel dari penyimpanan browser (localStorage) agar mapel kustom yang ditambahkan tidak hilang saat di-refresh
+let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelWajibDefault;
 
-// Jalankan fungsi memuat data pilihan mapel saat aplikasi pertama kali dibuka
+// Jalankan pemuatan otomatis setelan dropdown mapel saat aplikasi terbuka
 document.addEventListener("DOMContentLoaded", () => {
     muatPilihanMapel();
 });
 
-// Fungsi untuk memasukkan array mapel ke elemen select HTML
+// Fungsi memproses list array ke dalam bentuk elemen opsi select HTML
 function muatPilihanMapel() {
     const selectMapel = document.getElementById('menu-mapel');
     if (!selectMapel) return;
 
-    // Bersihkan isi sebelumnya, buat placeholder awal
     selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
 
-    // Loop data mapel ke dalam tag option
     listMapelSistem.forEach(mapel => {
         const option = document.createElement('option');
         option.value = mapel;
@@ -44,7 +46,7 @@ function muatPilihanMapel() {
     });
 }
 
-// Fungsi untuk menambah Mata Pelajaran baru sendiri langsung dari layar aplikasi
+// Fungsi menambah/edit mata pelajaran sendiri secara langsung
 function tambahMapelKustom() {
     Swal.fire({
         title: 'Tambah Mapel Baru',
@@ -59,28 +61,23 @@ function tambahMapelKustom() {
             if (!value) {
                 return 'Nama mata pelajaran tidak boleh kosong!';
             }
-            // Mencegah duplikasi nama mapel yang sama
             if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) {
-                return 'Mata pelajaran ini sudah terdaftar di sistem!';
+                return 'Mata pelajaran tersebut sudah ada dalam daftar sistem!';
             }
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const namaMapelBaru = result.value.trim();
+            const mapelBaru = result.value.trim();
             
-            // Masukkan ke array sistem dan amankan ke localStorage
-            listMapelSistem.push(namaMapelBaru);
+            listMapelSistem.push(mapelBaru);
             localStorage.setItem('siassmansala_mapel', JSON.stringify(listMapelSistem));
             
-            // Refresh ulang isi dropdown select
             muatPilihanMapel();
-            
-            // Set otomatis pilihan dropdown ke mapel baru tersebut
-            document.getElementById('menu-mapel').value = namaMapelBaru;
+            document.getElementById('menu-mapel').value = mapelBaru;
 
             Swal.fire({
                 title: 'Berhasil!',
-                text: `Mapel "${namaMapelBaru}" telah ditambahkan ke menu pilihan.`,
+                text: `Mapel "${mapelBaru}" sukses ditambahkan ke daftar pilihan.`,
                 icon: 'success',
                 timer: 1500,
                 showConfirmButton: false
@@ -89,7 +86,7 @@ function tambahMapelKustom() {
     });
 }
 
-// Fungsi navigasi dengan efek transisi animasi bergerak
+// Fungsi perpindahan halaman + Animasi Bergerak Mulus
 function switchPanel(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     
@@ -108,7 +105,7 @@ function switchPanel(id) {
     }
 }
 
-// Fungsi eksekusi login SIASSMANSALA
+// Eksekusi Login Sistem Admin Berdasarkan Akun Resmi
 function loginSistem() {
     const userField = document.getElementById('login-username');
     const passField = document.getElementById('login-password');
@@ -119,16 +116,16 @@ function loginSistem() {
     const passVal = passField.value;
 
     if (!userVal || !passVal) {
-        Swal.fire('Perhatian', 'Silakan isi kolom Username dan Password!', 'warning');
+        Swal.fire('Perhatian', 'Silakan masukkan Username dan Password Anda!', 'warning');
         return;
     }
 
-    // PENGECEKAN KREDENSIAL AKUN UTAMA
+    // VALIDASI USERNAME & PASSWORD FIX
     if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
-        loggedInUser = userVal; 
+        loggedInUser = userVal;
         
         Swal.fire({
-            title: 'Berhasil Masuk!',
+            title: 'Akses Diterima!',
             text: `Selamat datang kembali, ${loggedInUser}`,
             icon: 'success',
             timer: 1100,
@@ -146,8 +143,10 @@ function loginSistem() {
     }
 }
 
-// Fungsi Simpan Formulir 5 Menu Utama
-function simpanDataSistem() {
+// ==========================================================================
+// LOGIKA UTAMA: MENGIRIM DATA FORMULIR KE CLOUD DATABASE SUPABASE
+// ==========================================================================
+async function simpanDataSistem() {
     const kelas = document.getElementById('menu-kelas').value;
     const nama = document.getElementById('menu-nama').value.trim();
     const mapel = document.getElementById('menu-mapel').value;
@@ -163,33 +162,50 @@ function simpanDataSistem() {
         return Swal.fire('Nilai Tidak Valid', 'Isi kolom nilai dengan angka antara 0 - 100.', 'error');
     }
 
-    const recordBaru = {
-        id: Date.now(),
-        kelas: kelas,
-        namaSiswa: nama,
-        mataPelajaran: mapel,
-        nilaiSiswa: numNilai,
-        penggunaPetugas: pengguna,
-        waktuSimpan: new Date().toLocaleString('id-ID')
-    };
-
-    dbSiassmansala.push(recordBaru);
-    localStorage.setItem('siassmansala_data', JSON.stringify(dbSiassmansala));
-
+    // Tampilkan Loading Spinner saat proses upload sedang berjalan
     Swal.fire({
-        title: 'Tersimpan!',
-        text: 'Data pengelolaan siswa berhasil diamankan ke sistem.',
-        icon: 'success',
-        confirmButtonColor: '#2563eb'
-    }).then(() => {
-        document.getElementById('menu-kelas').value = '';
-        document.getElementById('menu-nama').value = '';
-        document.getElementById('menu-mapel').value = '';
-        document.getElementById('menu-nilai').value = '';
+        title: 'Menyimpan Data...',
+        text: 'Sedang menghubungkan ke server Supabase',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
     });
+
+    // Kirim data ke tabel 'data_siswa' di Supabase
+    const { data, error } = await supabase
+        .from('data_siswa')
+        .insert([
+            { 
+                kelas: kelas, 
+                nama_siswa: nama, 
+                mata_pelajaran: mapel, 
+                nilai_siswa: numNilai, 
+                pengguna_petugas: pengguna 
+            }
+        ]);
+
+    // Tutup loading spinner
+    Swal.close();
+
+    if (error) {
+        console.error("Gagal Menyimpan ke Supabase:", error);
+        Swal.fire('Gagal Menyimpan', 'Terjadi kesalahan sistem: ' + error.message, 'error');
+    } else {
+        Swal.fire({
+            title: 'Berhasil Tersimpan!',
+            text: 'Data pengelolaan siswa berhasil diamankan ke cloud database Supabase.',
+            icon: 'success',
+            confirmButtonColor: '#2563eb'
+        }).then(() => {
+            // Reset isian formulir setelah berhasil
+            document.getElementById('menu-kelas').value = '';
+            document.getElementById('menu-nama').value = '';
+            document.getElementById('menu-mapel').value = '';
+            document.getElementById('menu-nilai').value = '';
+        });
+    }
 }
 
-// Fungsi Log Out Sistem
+// Fungsi Keluar Sistem (Log Out)
 function logoutSistem() {
     Swal.fire({
         title: 'Keluar Aplikasi?',
