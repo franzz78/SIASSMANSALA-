@@ -93,7 +93,7 @@ button {
 .btn-text { background: transparent; color: #64748b; font-size: 13px; margin-top: 12px; font-weight: 600; text-align: center; }
 .btn-text:hover { color: #ef4444; }
 
-/* ANIMASI BERGERAK UNTUK HALAMAN SELANJUTNYA */
+/* ANIMASI BERGERAK */
 .panel { 
     display: none; 
     opacity: 0;
@@ -106,16 +106,11 @@ button {
 }
 
 @keyframes halamanMasuk { 
-    0% { 
-        opacity: 0; 
-        transform: translateY(25px) scale(0.96); 
-    } 
-    100% { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    } 
+    0% { opacity: 0; transform: translateY(25px) scale(0.96); } 
+    100% { opacity: 1; transform: translateY(0) scale(1); } 
 }
 
 @media (max-width: 480px) {
     .app-container { padding: 25px 20px; }
 }
+
