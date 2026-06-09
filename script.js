@@ -12,7 +12,11 @@ const mapelDefault = [
     "Fisika",
     "Sejarah",
     "Ekonomi",
-    "PKWU"
+    "PKWU",
+    "KIMIA",
+    "GEOGRAFI",
+    "SOSIOLOGI",
+    "MATEMATIKA TL",
 ];
 
 // Ambil daftar mapel kustom dari localStorage jika ada, kalau tidak gunakan default
