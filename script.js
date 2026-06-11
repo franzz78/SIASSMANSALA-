@@ -1,151 +1,178 @@
-// ==========================================
-// KONFIGURASI KONEKSI DATABASE SUPABASE (SUDAH TERHUBUNG)
-// ==========================================
 const SUPABASE_URL = "https://jtvfacdloqykdlbiariy.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0dmZhY2Rsb3F5a2RsYmlhcml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzgzNTcsImV4cCI6MjA5NjUxNDM1N30.Q-zNIS0tki5Tn37P8R6u-LPTkOCnE2r5jllMj922N2k";
 
-// MenginisialisASI Client Supabase
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase;
+try {
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+} catch (err) {
+    console.error("Supabase crash:", err);
+}
 
-let loggedInUser = ""; 
-
-// List 10 Mata Pelajaran Wajib Sesuai Permintaan Anda
-const mapelWajibDefault = [
-    "Bahasa Indonesia",
-    "Bahasa Sunda",
-    "Bahasa Inggris",
-    "Matematika",
-    "Informatika",
-    "Biologi",
-    "Fisika",
-    "Sejarah",
-    "Ekonomi",
-    "PKWU"
-];
-
-// Ambil data mapel dari penyimpanan browser (localStorage) agar mapel kustom yang ditambahkan tidak hilang saat di-refresh
+let loggedInUser = "";
+const mapelWajibDefault = ["Bahasa Indonesia", "Bahasa Sunda", "Bahasa Inggris", "Matematika", "Informatika", "Biologi", "Fisika", "Sejarah", "Ekonomi", "PKWU"];
 let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelWajibDefault;
 
-// Jalankan pemuatan otomatis setelan dropdown mapel saat aplikasi terbuka
 document.addEventListener("DOMContentLoaded", () => {
     muatPilihanMapel();
+    muatDaftarMapelTab();
 });
 
-// Fungsi memproses list array ke dalam bentuk elemen opsi select HTML
 function muatPilihanMapel() {
     const selectMapel = document.getElementById('menu-mapel');
     if (!selectMapel) return;
-
     selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
-
-    listMapelSistem.forEach(mapel => {
-        const option = document.createElement('option');
-        option.value = mapel;
-        option.textContent = mapel;
-        selectMapel.appendChild(option);
+    listMapelSistem.forEach(m => {
+        let opt = document.createElement('option');
+        opt.value = m; opt.textContent = m;
+        selectMapel.appendChild(opt);
     });
 }
 
-// Fungsi menambah/edit mata pelajaran sendiri secara langsung
+function muatDaftarMapelTab() {
+    const wrapper = document.getElementById('daftar-mapel-list');
+    if (!wrapper) return;
+    wrapper.innerHTML = "";
+    listMapelSistem.forEach(m => {
+        let li = document.createElement('li');
+        li.className = "mapel-item-list";
+        li.textContent = m;
+        wrapper.appendChild(li);
+    });
+}
+
 function tambahMapelKustom() {
     Swal.fire({
-        title: 'Tambah Mapel Baru',
+        title: 'Tambah Mapel',
         input: 'text',
-        inputPlaceholder: 'Tulis nama mata pelajaran baru...',
+        inputPlaceholder: 'Nama mata pelajaran...',
         showCancelButton: true,
         confirmButtonColor: '#2563eb',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'Tambahkan',
-        cancelButtonText: 'Batal',
         inputValidator: (value) => {
-            if (!value) {
-                return 'Nama mata pelajaran tidak boleh kosong!';
-            }
-            if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) {
-                return 'Mata pelajaran tersebut sudah ada dalam daftar sistem!';
-            }
+            if (!value) return 'Tidak boleh kosong!';
+            if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) return 'Sudah terdaftar!';
         }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const mapelBaru = result.value.trim();
-            
-            listMapelSistem.push(mapelBaru);
+    }).then((res) => {
+        if (res.isConfirmed) {
+            listMapelSistem.push(res.value.trim());
             localStorage.setItem('siassmansala_mapel', JSON.stringify(listMapelSistem));
-            
             muatPilihanMapel();
-            document.getElementById('menu-mapel').value = mapelBaru;
-
-            Swal.fire({
-                title: 'Berhasil!',
-                text: `Mapel "${mapelBaru}" sukses ditambahkan ke daftar pilihan.`,
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            muatDaftarMapelTab();
+            Swal.fire('Sukses', 'Mapel ditambahkan', 'success');
         }
     });
 }
 
-// Fungsi perpindahan halaman + Animasi Bergerak Mulus
-function switchPanel(id) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    
-    const targetPanel = document.getElementById(id);
-    if (targetPanel) {
-        targetPanel.classList.add('active');
-    }
+// LOGIKA NAVIGASI TAB SIDEBAR INTERNAL
+function bukaTab(evt, tabId) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(c => c.classList.remove('active'));
 
-    const container = document.getElementById('main-container');
-    if (!container) return;
+    const links = document.querySelectorAll('.tab-link');
+    links.forEach(l => l.classList.remove('active'));
 
-    if (id === 'panel-menu') {
-        container.classList.add('wide');
-    } else {
-        container.classList.remove('wide');
-    }
+    document.getElementById(tabId).classList.add('active');
+    evt.currentTarget.classList.add('active');
 }
 
-// Eksekusi Login Sistem Admin Berdasarkan Akun Resmi
+function switchPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+
+    const container = document.getElementById('main-container');
+    if (id === 'panel-menu') container.classList.add('wide');
+    else container.classList.remove('wide');
+}
+
+// TOMBOL LOGIN PERBAIKAN FIX TOTAL
 function loginSistem() {
-    const userField = document.getElementById('login-username');
-    const passField = document.getElementById('login-password');
+    const u = document.getElementById('login-username').value.trim();
+    const p = document.getElementById('login-password').value;
 
-    if (!userField || !passField) return;
-
-    const userVal = userField.value.trim();
-    const passVal = passField.value;
-
-    if (!userVal || !passVal) {
-        Swal.fire('Perhatian', 'Silakan masukkan Username dan Password Anda!', 'warning');
+    if (!u || !p) {
+        Swal.fire('Peringatan', 'Username/Password kosong!', 'warning');
         return;
     }
 
-    // VALIDASI USERNAME & PASSWORD FIX
-    if (userVal === 'AdminSMANSALA#' && passVal === 'SIAS2026-27##') {
-        loggedInUser = userVal;
-        
-        Swal.fire({
-            title: 'Akses Diterima!',
-            text: `Selamat datang kembali, ${loggedInUser}`,
-            icon: 'success',
-            timer: 1100,
-            showConfirmButton: false
-        }).then(() => {
+    if (u === 'AdminSMANSALA#' && p === 'SIAS2026-27##') {
+        loggedInUser = u;
+        Swal.fire({ title: 'Berhasil Masuk', icon: 'success', timer: 1000, showConfirmButton: false })
+        .then(() => {
             switchPanel('panel-menu');
-
-            const fieldUser = document.getElementById('menu-pengguna');
-            if (fieldUser) {
-                fieldUser.value = loggedInUser;
-            }
+            document.getElementById('menu-pengguna').value = loggedInUser;
+            hitungStatistikNilai();
         });
     } else {
-        Swal.fire('Gagal Masuk', 'Username atau Password salah!', 'error');
+        Swal.fire('Gagal', 'Akun tidak terdaftar!', 'error');
     }
 }
 
-// ==========================================================================
-// LOGIKA UTAMA: MENGIRIM DATA FORMULIR KE CLOUD DATABASE SUPABASE
-// ==========================================================================
+// AMBIL DATA DARI SUPABASE (MENU SELURUH SISWA)
+async function muatSeluruhSiswa() {
+    if (!supabase) return;
+    const tbody = document.getElementById('tabel-semua-siswa');
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Mengunduh data server...</td></tr>';
+
+    const { data, error } = await supabase.from('data_siswa').select('*').order('id', { ascending: false });
+    
+    if (error) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data!</td></tr>';
+        return;
+    }
+
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Belum ada data siswa.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = "";
+    data.forEach(s => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${s.nama_siswa}</b></td><td><span class="badge-kelas">${s.kelas}</span></td><td>${s.mata_pelajaran}</td><td><span class="nilai-text">${s.nilai_siswa}</span></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+// AMBIL DATA BERDASARKAN FILTER (MENU SETIAP KELAS)
+async function muatDataPerKelas(kelasPilihan) {
+    if (!kelasPilihan) return;
+    const tbody = document.getElementById('tabel-per-kelas');
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Mencari data kelas...</td></tr>';
+
+    const { data, error } = await supabase.from('data_siswa').select('*').eq('kelas', kelasPilihan);
+
+    if (error || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#64748b;">Tidak ada data di kelas ${kelasPilihan}</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = "";
+    data.forEach(s => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${s.nama_siswa}</b></td><td>${s.mata_pelajaran}</td><td><span class="nilai-text">${s.nilai_siswa}</span></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+// HITUNG ANALISIS (MENU NILAI)
+async function hitungStatistikNilai() {
+    if (!supabase) return;
+    const { data, error } = await supabase.from('data_siswa').select('nilai_siswa');
+    if (error || !data || data.length === 0) return;
+
+    let nilaiArray = data.map(d => d.nilai_siswa);
+    let max = Math.max(...nilaiArray);
+    let min = Math.min(...nilaiArray);
+    let avg = nilaiArray.reduce((a, b) => a + b, 0) / nilaiArray.length;
+
+    document.getElementById('stat-max').textContent = max;
+    document.getElementById('stat-min').textContent = min;
+    document.getElementById('stat-avg').textContent = avg.toFixed(1);
+}
+
+// ACTION INPUT FORM DATA
 async function simpanDataSistem() {
     const kelas = document.getElementById('menu-kelas').value;
     const nama = document.getElementById('menu-nama').value.trim();
@@ -153,75 +180,35 @@ async function simpanDataSistem() {
     const nilai = document.getElementById('menu-nilai').value.trim();
     const pengguna = document.getElementById('menu-pengguna').value;
 
-    if (!kelas || !nama || !mapel || !nilai) {
-        return Swal.fire('Data Belum Lengkap', 'Silakan lengkapi seluruh isian formulir menu.', 'warning');
-    }
+    if (!kelas || !nama || !mapel || !nilai) return Swal.fire('Gagal', 'Lengkapi formulir!', 'warning');
+    
+    let numNilai = parseFloat(nilai);
+    Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-    const numNilai = parseFloat(nilai);
-    if (isNaN(numNilai) || numNilai < 0 || numNilai > 100) {
-        return Swal.fire('Nilai Tidak Valid', 'Isi kolom nilai dengan angka antara 0 - 100.', 'error');
-    }
-
-    // Tampilkan Loading Spinner saat proses upload sedang berjalan
-    Swal.fire({
-        title: 'Menyimpan Data...',
-        text: 'Sedang menghubungkan ke server Supabase',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
-
-    // Kirim data ke tabel 'data_siswa' di Supabase
-    const { data, error } = await supabase
-        .from('data_siswa')
-        .insert([
-            { 
-                kelas: kelas, 
-                nama_siswa: nama, 
-                mata_pelajaran: mapel, 
-                nilai_siswa: numNilai, 
-                pengguna_petugas: pengguna 
-            }
-        ]);
-
-    // Tutup loading spinner
+    const { error } = await supabase.from('data_siswa').insert([{ kelas, nama_siswa: nama, mata_pelajaran: mapel, nilai_siswa: numNilai, pengguna_petugas: pengguna }]);
     Swal.close();
 
     if (error) {
-        console.error("Gagal Menyimpan ke Supabase:", error);
-        Swal.fire('Gagal Menyimpan', 'Terjadi kesalahan sistem: ' + error.message, 'error');
+        Swal.fire('Gagal', error.message, 'error');
     } else {
-        Swal.fire({
-            title: 'Berhasil Tersimpan!',
-            text: 'Data pengelolaan siswa berhasil diamankan ke cloud database Supabase.',
-            icon: 'success',
-            confirmButtonColor: '#2563eb'
-        }).then(() => {
-            // Reset isian formulir setelah berhasil
-            document.getElementById('menu-kelas').value = '';
-            document.getElementById('menu-nama').value = '';
-            document.getElementById('menu-mapel').value = '';
-            document.getElementById('menu-nilai').value = '';
-        });
+        Swal.fire('Berhasil', 'Data siswa disimpan ke cloud.', 'success');
+        document.getElementById('menu-nama').value = "";
+        document.getElementById('menu-nilai').value = "";
+        hitungStatistikNilai();
     }
 }
 
-// Fungsi Keluar Sistem (Log Out)
-function logoutSistem() {
-    Swal.fire({
-        title: 'Keluar Aplikasi?',
-        text: 'Sesi aktif Anda akan segera berakhir.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#2563eb',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'Keluar',
-        cancelButtonText: 'Batal'
-    }).then((res) => {
-        if (res.isConfirmed) {
-            document.getElementById('login-username').value = '';
-            document.getElementById('login-password').value = '';
-            loggedInUser = "";
-            switchPanel('panel-awal');
-        }
-    });
+function clearMapelCache() {
+    localStorage.removeItem('siassmansala_mapel');
+    listMapelSistem = mapelWajibDefault;
+    muatPilihanMapel();
+    muatDaftarMapelTab();
+    Swal.fire('Reset', 'Daftar mata pelajaran dikembalikan ke default.', 'success');
 }
+
+function logoutSistem() {
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+    switchPanel('panel-awal');
+    }
+                                
