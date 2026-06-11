@@ -1,3 +1,6 @@
+// ==========================================
+// KONFIGURASI ENGINE INTEGRASI SUPABASE CLOUD
+// ==========================================
 const SUPABASE_URL = "https://jtvfacdloqykdlbiariy.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0dmZhY2Rsb3F5a2RsYmlhcml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzgzNTcsImV4cCI6MjA5NjUxNDM1N30.Q-zNIS0tki5Tn37P8R6u-LPTkOCnE2r5jllMj922N2k";
 
@@ -5,15 +8,22 @@ let supabase;
 try {
     if (window.supabase) {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } else {
+        console.error("Library eksternal Supabase CDN tidak terbaca sempurna.");
     }
 } catch (err) {
-    console.error("Supabase crash:", err);
+    console.error("Koneksi gagal diinisiasi:", err);
 }
 
 let loggedInUser = "";
-const mapelWajibDefault = ["Bahasa Indonesia", "Bahasa Sunda", "Bahasa Inggris", "Matematika", "Informatika", "Biologi", "Fisika", "Sejarah", "Ekonomi", "PKWU"];
+const mapelWajibDefault = [
+    "Bahasa Indonesia", "Bahasa Sunda", "Bahasa Inggris", "Matematika", 
+    "Informatika", "Biologi", "Fisika", "Sejarah", "Ekonomi", "PKWU"
+];
+
 let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelWajibDefault;
 
+// Pemuatan data awal aplikasi
 document.addEventListener("DOMContentLoaded", () => {
     muatPilihanMapel();
     muatDaftarMapelTab();
@@ -44,14 +54,17 @@ function muatDaftarMapelTab() {
 
 function tambahMapelKustom() {
     Swal.fire({
-        title: 'Tambah Mapel',
+        title: 'Tambah Mapel Baru',
         input: 'text',
-        inputPlaceholder: 'Nama mata pelajaran...',
+        inputPlaceholder: 'Tulis nama mapel...',
         showCancelButton: true,
         confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#64748b',
         inputValidator: (value) => {
-            if (!value) return 'Tidak boleh kosong!';
-            if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) return 'Sudah terdaftar!';
+            if (!value) return 'Nama mata pelajaran tidak boleh kosong!';
+            if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) {
+                return 'Mata pelajaran ini sudah ada!';
+            }
         }
     }).then((res) => {
         if (res.isConfirmed) {
@@ -59,12 +72,12 @@ function tambahMapelKustom() {
             localStorage.setItem('siassmansala_mapel', JSON.stringify(listMapelSistem));
             muatPilihanMapel();
             muatDaftarMapelTab();
-            Swal.fire('Sukses', 'Mapel ditambahkan', 'success');
+            Swal.fire({ title: 'Sukses', text: 'Mata pelajaran baru berhasil didaftarkan.', icon: 'success', timer: 1200, showConfirmButton: false });
         }
     });
 }
 
-// LOGIKA NAVIGASI TAB SIDEBAR INTERNAL
+// EKSEKUSI PERPINDAHAN SUB TAB MENU INTERNAL
 function bukaTab(evt, tabId) {
     const contents = document.querySelectorAll('.tab-content');
     contents.forEach(c => c.classList.remove('active'));
@@ -86,44 +99,47 @@ function switchPanel(id) {
     else container.classList.remove('wide');
 }
 
-// TOMBOL LOGIN PERBAIKAN FIX TOTAL
+// LOGIKA LOGIN (DIJAMIN RESPONSIF SAAT DIKLIK)
 function loginSistem() {
-    const u = document.getElementById('login-username').value.trim();
-    const p = document.getElementById('login-password').value;
+    const uField = document.getElementById('login-username');
+    const pField = document.getElementById('login-password');
+    if (!uField || !pField) return;
+
+    const u = uField.value.trim();
+    const p = pField.value;
 
     if (!u || !p) {
-        Swal.fire('Peringatan', 'Username/Password kosong!', 'warning');
+        Swal.fire('Perhatian', 'Silakan masukkan Username dan Password Anda!', 'warning');
         return;
     }
 
     if (u === 'AdminSMANSALA#' && p === 'SIAS2026-27##') {
         loggedInUser = u;
-        Swal.fire({ title: 'Berhasil Masuk', icon: 'success', timer: 1000, showConfirmButton: false })
+        Swal.fire({ title: 'Akses Diterima!', text: `Selamat datang kembali, ${loggedInUser}`, icon: 'success', timer: 1000, showConfirmButton: false })
         .then(() => {
             switchPanel('panel-menu');
             document.getElementById('menu-pengguna').value = loggedInUser;
-            hitungStatistikNilai();
         });
     } else {
-        Swal.fire('Gagal', 'Akun tidak terdaftar!', 'error');
+        Swal.fire('Gagal Masuk', 'Akun petugas tidak terdaftar atau password salah!', 'error');
     }
 }
 
-// AMBIL DATA DARI SUPABASE (MENU SELURUH SISWA)
+// AMBIL DATA REALTIME UNTUK MENU SELURUH SISWA
 async function muatSeluruhSiswa() {
     if (!supabase) return;
     const tbody = document.getElementById('tabel-semua-siswa');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Mengunduh data server...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b;">Menghubungkan ke cloud database server...</td></tr>';
 
     const { data, error } = await supabase.from('data_siswa').select('*').order('id', { ascending: false });
     
     if (error) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data!</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444; font-weight:bold;">Gagal sinkronisasi data!</td></tr>';
         return;
     }
 
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Belum ada data siswa.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b;">Belum ada record data siswa tersimpan.</td></tr>';
         return;
     }
 
@@ -137,14 +153,18 @@ async function muatSeluruhSiswa() {
 
 // AMBIL DATA BERDASARKAN FILTER (MENU SETIAP KELAS)
 async function muatDataPerKelas(kelasPilihan) {
-    if (!kelasPilihan) return;
     const tbody = document.getElementById('tabel-per-kelas');
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Mencari data kelas...</td></tr>';
+    if (!kelasPilihan) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#64748b;">Silakan pilih kelas di atas terlebih dahulu.</td></tr>';
+        return;
+    }
+    if (!supabase) return;
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#64748b;">Menyaring data kelas...</td></tr>';
 
-    const { data, error } = await supabase.from('data_siswa').select('*').eq('kelas', kelasPilihan);
+    const { data, error } = await supabase.from('data_siswa').select('*').eq('kelas', kelasPilihan).order('nama_siswa', { ascending: true });
 
     if (error || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#64748b;">Tidak ada data di kelas ${kelasPilihan}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#64748b;">Tidak ditemukan data siswa aktif untuk kelas ${kelasPilihan}.</td></tr>`;
         return;
     }
 
@@ -156,11 +176,16 @@ async function muatDataPerKelas(kelasPilihan) {
     });
 }
 
-// HITUNG ANALISIS (MENU NILAI)
+// HITUNG REKAP OTOMATIS (MENU NILAI)
 async function hitungStatistikNilai() {
     if (!supabase) return;
     const { data, error } = await supabase.from('data_siswa').select('nilai_siswa');
-    if (error || !data || data.length === 0) return;
+    if (error || !data || data.length === 0) {
+        document.getElementById('stat-max').textContent = "-";
+        document.getElementById('stat-min').textContent = "-";
+        document.getElementById('stat-avg').textContent = "-";
+        return;
+    }
 
     let nilaiArray = data.map(d => d.nilai_siswa);
     let max = Math.max(...nilaiArray);
@@ -172,29 +197,36 @@ async function hitungStatistikNilai() {
     document.getElementById('stat-avg').textContent = avg.toFixed(1);
 }
 
-// ACTION INPUT FORM DATA
+// FORM SUBMISSION UNTUK SIMPAN DATA KE SUPABASE
 async function simpanDataSistem() {
+    if (!supabase) return Swal.fire('Error', 'Sistem tidak terhubung ke database.', 'error');
+
     const kelas = document.getElementById('menu-kelas').value;
     const nama = document.getElementById('menu-nama').value.trim();
     const mapel = document.getElementById('menu-mapel').value;
     const nilai = document.getElementById('menu-nilai').value.trim();
     const pengguna = document.getElementById('menu-pengguna').value;
 
-    if (!kelas || !nama || !mapel || !nilai) return Swal.fire('Gagal', 'Lengkapi formulir!', 'warning');
+    if (!kelas || !nama || !mapel || !nilai) {
+        return Swal.fire('Gagal Menyimpan', 'Formulir isian tidak boleh kosong!', 'warning');
+    }
     
     let numNilai = parseFloat(nilai);
-    Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    if (isNaN(numNilai) || numNilai < 0 || numNilai > 100) {
+        return Swal.fire('Nilai Salah', 'Skala nilai harus berkisar dari 0 sampai 100.', 'error');
+    }
+
+    Swal.fire({ title: 'Mengamankan Data...', text: 'Mengunggah ke cloud storage', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
     const { error } = await supabase.from('data_siswa').insert([{ kelas, nama_siswa: nama, mata_pelajaran: mapel, nilai_siswa: numNilai, pengguna_petugas: pengguna }]);
     Swal.close();
 
     if (error) {
-        Swal.fire('Gagal', error.message, 'error');
+        Swal.fire('Gagal', 'Terjadi gangguan: ' + error.message, 'error');
     } else {
-        Swal.fire('Berhasil', 'Data siswa disimpan ke cloud.', 'success');
+        Swal.fire('Sukses Tersimpan', 'Record data siswa dikunci aman di cloud.', 'success');
         document.getElementById('menu-nama').value = "";
         document.getElementById('menu-nilai').value = "";
-        hitungStatistikNilai();
     }
 }
 
@@ -203,12 +235,13 @@ function clearMapelCache() {
     listMapelSistem = mapelWajibDefault;
     muatPilihanMapel();
     muatDaftarMapelTab();
-    Swal.fire('Reset', 'Daftar mata pelajaran dikembalikan ke default.', 'success');
+    Swal.fire('Reset Berhasil', 'Pilihan daftar mata pelajaran dikembalikan ke bawaan.', 'success');
 }
 
 function logoutSistem() {
     document.getElementById('login-username').value = '';
     document.getElementById('login-password').value = '';
+    loggedInUser = "";
     switchPanel('panel-awal');
-    }
-                                
+                         }
+            
