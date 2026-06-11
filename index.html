@@ -47,7 +47,7 @@
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" class="input-field" placeholder="Masukkan password...">
                 </div>
-                <button type="button" class="btn-primary" onclick="loginSistem()">MASUK</button>
+                <button type="button" class="btn-primary" id="btn-submit-login" onclick="loginSistem()">MASUK SISTER</button>
             </div>
         </div>
 
@@ -55,19 +55,23 @@
             <div class="dashboard-layout">
                 
                 <div class="sidebar-tabs">
-                    <button class="tab-link active" onclick="bukaTab(event, 'sub-input')">Input Data</button>
+                    <div class="sidebar-header-brand">
+                        <img src="https://jtvfacdloqykdlbiariy.supabase.co/storage/v1/object/sign/Logo_SMANSALA/Logo_SMANSALA./SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81NTAwOWFiNi00ODQ2LTRlNDQtYjRjMi03NjZiYjAwODkyMzkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvX1NNQU5TQUxBL0xvZ29fU01BTlNBTEEuL1NNQU5TQUxBLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODA5Nzc5MzgsImV4cCI6MTgxMjUxMzkzOH0.IXgJFY5zqaJs6RxJIU0juZI31arY7GcJyO7WwsS3CJE" alt="Logo SMANSALA">
+                        <span>SIAS MENU</span>
+                    </div>
+                    <button class="tab-link active" onclick="bukaTab(event, 'sub-input')">Form Input</button>
                     <button class="tab-link" onclick="bukaTab(event, 'sub-seluruh-siswa'); muatSeluruhSiswa();">Seluruh Siswa</button>
                     <button class="tab-link" onclick="bukaTab(event, 'sub-setiap-kelas')">Setiap Kelas</button>
                     <button class="tab-link" onclick="bukaTab(event, 'sub-mata-pelajaran')">Mata Pelajaran</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-nilai-stats')">Menu Nilai</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-nilai-stats'); hitungStatistikNilai();">Menu Nilai</button>
                     <button class="tab-link" onclick="bukaTab(event, 'sub-settings')">Settings</button>
-                    <button class="tab-link btn-logout-side" onclick="logoutSistem()">Keluar</button>
+                    <button class="tab-link btn-logout-side" onclick="logoutSistem()">Log Out</button>
                 </div>
 
                 <div class="content-tabs">
                     
                     <div id="sub-input" class="tab-content active">
-                        <h3 class="section-title">Formulir Input Data</h3>
+                        <h3 class="section-title">Formulir Input Data Siswa</h3>
                         <div class="form-group">
                             <label for="menu-kelas">Menu Kelas</label>
                             <select id="menu-kelas" class="input-field">
@@ -84,7 +88,7 @@
                         </div>
                         <div class="form-group">
                             <label for="menu-nama">Menu Nama Siswa</label>
-                            <input type="text" id="menu-nama" class="input-field" placeholder="Nama lengkap...">
+                            <input type="text" id="menu-nama" class="input-field" placeholder="Masukkan nama siswa lengkap...">
                         </div>
                         <div class="form-group">
                             <label for="menu-mapel">Menu Mata Pelajaran</label>
@@ -92,35 +96,36 @@
                         </div>
                         <div class="form-group">
                             <label for="menu-nilai">Menu Nilai</label>
-                            <input type="number" id="menu-nilai" class="input-field" placeholder="0-100" min="0" max="100">
+                            <input type="number" id="menu-nilai" class="input-field" placeholder="Rentang angka 0 - 100" min="0" max="100">
                         </div>
-                        <button type="button" class="btn-primary" onclick="simpanDataSistem()">SIMPAN DATA</button>
+                        <button type="button" class="btn-primary" onclick="simpanDataSistem()">SIMPAN DATA CLOUD</button>
                     </div>
 
                     <div id="sub-seluruh-siswa" class="tab-content">
-                        <h3 class="section-title">Data Seluruh Siswa</h3>
+                        <h3 class="section-title">Data Seluruh Siswa SMANSALA</h3>
                         <div class="table-responsive">
                             <table class="data-table">
-                                theme-color<thead>
+                                <thead>
                                     <tr>
-                                        <th>Nama</th>
+                                        <th>Nama Lengkap</th>
                                         <th>Kelas</th>
-                                        <th>Mapel</th>
+                                        <th>Mata Pelajaran</th>
                                         <th>Nilai</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabel-semua-siswa">
-                                    <tr><td colspan="4" style="text-align:center; color:#64748b;">Memuat data...</td></tr>
+                                    <tr><td colspan="4" style="text-align:center; color:#64748b;">Memuat database...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <div id="sub-setiap-kelas" class="tab-content">
-                        <h3 class="section-title">Filter Setiap Kelas</h3>
+                        <h3 class="section-title">Data Filter Setiap Kelas</h3>
                         <div class="form-group">
+                            <label for="filter-kelas-dropdown">Pilih Kategori Kelas</label>
                             <select id="filter-kelas-dropdown" class="input-field" onchange="muatDataPerKelas(this.value)">
-                                <option value="">-- Pilih Kelas untuk Dilihat --</option>
+                                <option value="">-- Pilih Kelas untuk Menampilkan Data --</option>
                                 <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
                                 <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
                                 <option>XI.F1</option><option>XI.F2</option><option>XI.F3</option><option>XI.F4</option><option>XI.F5</option>
@@ -131,26 +136,28 @@
                             <table class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Nama</th>
-                                        <th>Mapel</th>
-                                        <th>Nilai</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Nilai Siswa</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabel-per-kelas">
-                                    <tr><td colspan="3" style="text-align:center; color:#64748b;">Silakan pilih kelas terlebih dahulu.</td></tr>
+                                    <tr><td colspan="3" style="text-align:center; color:#64748b;">Silakan pilih kelas di atas terlebih dahulu.</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <div id="sub-mata-pelajaran" class="tab-content">
-                        <h3 class="section-title">Pengelolaan Mata Pelajaran</h3>
-                        <button class="btn-primary" style="padding:10px; margin-bottom:15px; font-size:12px;" onclick="tambahMapelKustom()">+ Tambah Mapel Baru</button>
+                        <h3 class="section-title">Daftar Mata Pelajaran Aktif</h3>
+                        <div style="margin-bottom: 15px;">
+                            <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="tambahMapelKustom()">+ Tambah Mapel Baru</button>
+                        </div>
                         <ul class="list-mapel-wrapper" id="daftar-mapel-list"></ul>
                     </div>
 
                     <div id="sub-nilai-stats" class="tab-content">
-                        <h3 class="section-title">Analisis Rekap Nilai</h3>
+                        <h3 class="section-title">Rekapitulasi Analisis Nilai</h3>
                         <div class="stats-card-grid">
                             <div class="stat-box">
                                 <div class="stat-title">Nilai Tertinggi</div>
@@ -161,26 +168,28 @@
                                 <div class="stat-value" id="stat-min">-</div>
                             </div>
                             <div class="stat-box" style="grid-column: span 2;">
-                                <div class="stat-title">Rata-Rata Nilai Sekolah</div>
-                                <div class="stat-value" id="stat-avg" style="color:#2563eb;">-</div>
+                                <div class="stat-title">Rata-Rata Nilai Keseluruhan</div>
+                                <div class="stat-value" id="stat-avg" style="color: #2563eb;">-</div>
                             </div>
                         </div>
-                        <button class="btn-primary" style="margin-top:15px;" onclick="hitungStatistikNilai()">Refresh Analisis Nilai</button>
+                        <button class="btn-primary" style="margin-top: 20px;" onclick="hitungStatistikNilai()">Refresh Analisis Data</button>
                     </div>
 
                     <div id="sub-settings" class="tab-content">
-                        <h3 class="section-title">Pengaturan Sistem</h3>
+                        <h3 class="section-title">Pengaturan Aplikasi</h3>
                         <div class="form-group">
-                            <label>Petugas Aktif</label>
-                            <input type="text" id="menu-pengguna" class="input-field" readonly style="background:#e2e8f0; color:#475569;">
+                            <label>Petugas Penilai Aktif</label>
+                            <input type="text" id="menu-pengguna" class="input-field" readonly style="background: #e2e8f0; color: #475569; font-weight: 600;">
                         </div>
                         <div class="form-group">
-                            <label>Status Server Database</label>
-                            <div style="font-size:13px; font-weight:bold; color:#16a34a; padding:10px; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0;">
-                                ● Connected to Supabase Cloud Storage
+                            <label>Status Server</label>
+                            <div style="font-size: 13px; font-weight: bold; color: #16a34a; padding: 12px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0;">
+                                ● Terkoneksi ke Supabase Cloud (siassmansala_data)
                             </div>
                         </div>
-                        <button class="btn-text" style="color:#ef4444; font-weight:bold;" onclick="clearMapelCache()">Reset Pilihan Mapel ke Default</button>
+                        <div style="margin-top: 25px;">
+                            <button class="btn-text" style="color: #ef4444; text-align: left; font-weight: bold; padding: 0;" onclick="clearMapelCache()">→ Reset Semua Mapel ke Setelan Awal</button>
+                        </div>
                     </div>
 
                 </div>
