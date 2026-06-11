@@ -47,7 +47,7 @@
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" class="input-field" placeholder="Masukkan password...">
                 </div>
-                <button type="button" class="btn-primary" onclick="loginSistem()">MASUK</button>
+                <button type="button" class="btn-primary" id="tombol-masuk-sias">MASUK</button>
             </div>
         </div>
 
@@ -59,13 +59,13 @@
                         <img src="https://jtvfacdloqykdlbiariy.supabase.co/storage/v1/object/sign/Logo_SMANSALA/Logo_SMANSALA./SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81NTAwOWFiNi00ODQ2LTRlNDQtYjRjMi03NjZiYjAwODkyMzkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvX1NNQU5TQUxBL0xvZ29fU01BTlNBTEEuL1NNQU5TQUxBLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODA5Nzc5MzgsImV4cCI6MTgxMjUxMzkzOH0.IXgJFY5zqaJs6RxJIU0juZI31arY7GcJyO7WwsS3CJE" alt="Logo SMANSALA">
                         <span>MENU UTAMA</span>
                     </div>
-                    <button class="tab-link active" onclick="bukaTab(event, 'sub-input')">Input Data</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-seluruh-siswa'); muatSeluruhSiswa();">Seluruh Siswa</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-setiap-kelas')">Setiap Kelas</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-mata-pelajaran')">Mata Pelajaran</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-nilai-stats'); hitungStatistikNilai();">Menu Nilai</button>
-                    <button class="tab-link" onclick="bukaTab(event, 'sub-settings')">Settings</button>
-                    <button class="tab-link btn-logout-side" onclick="logoutSistem()">Keluar</button>
+                    <button class="tab-link active" id="btn-tab-input">Input Data</button>
+                    <button class="tab-link" id="btn-tab-semua">Seluruh Siswa</button>
+                    <button class="tab-link" id="btn-tab-kelas">Setiap Kelas</button>
+                    <button class="tab-link" id="btn-tab-mapel">Mata Pelajaran</button>
+                    <button class="tab-link" id="btn-tab-stats">Menu Nilai</button>
+                    <button class="tab-link" id="btn-tab-settings">Settings</button>
+                    <button class="tab-link btn-logout-side" id="btn-tab-logout">Keluar</button>
                 </div>
 
                 <div class="content-tabs">
@@ -98,7 +98,7 @@
                             <label for="menu-nilai">Menu Nilai</label>
                             <input type="number" id="menu-nilai" class="input-field" placeholder="0-100" min="0" max="100">
                         </div>
-                        <button type="button" class="btn-primary" onclick="simpanDataSistem()">SIMPAN DATA</button>
+                        <button type="button" class="btn-primary" id="btn-simpan-cloud">SIMPAN DATA</button>
                     </div>
 
                     <div id="sub-seluruh-siswa" class="tab-content">
@@ -123,7 +123,7 @@
                     <div id="sub-setiap-kelas" class="tab-content">
                         <h3 class="section-title">Filter Setiap Kelas</h3>
                         <div class="form-group">
-                            <select id="filter-kelas-dropdown" class="input-field" onchange="muatDataPerKelas(this.value)">
+                            <select id="filter-kelas-dropdown" class="input-field">
                                 <option value="">-- Pilih Kelas untuk Dilihat --</option>
                                 <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
                                 <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
@@ -149,7 +149,7 @@
 
                     <div id="sub-mata-pelajaran" class="tab-content">
                         <h3 class="section-title">Pengelolaan Mata Pelajaran</h3>
-                        <button class="btn-primary" style="padding:10px; margin-bottom:15px; font-size:12px; width:auto;" onclick="tambahMapelKustom()">+ Tambah Mapel Baru</button>
+                        <button class="btn-primary" style="padding:10px; margin-bottom:15px; font-size:12px; width:auto;" id="btn-tambah-mapel">+ Tambah Mapel Baru</button>
                         <ul class="list-mapel-wrapper" id="daftar-mapel-list"></ul>
                     </div>
 
@@ -157,7 +157,7 @@
                         <h3 class="section-title">Analisis Rekap Nilai</h3>
                         <div class="stats-card-grid">
                             <div class="stat-box">
-                                <div class="stat-title">Nilai Teringgi</div>
+                                <div class="stat-title">Nilai Tertinggi</div>
                                 <div class="stat-value" id="stat-max">-</div>
                             </div>
                             <div class="stat-box">
@@ -169,7 +169,7 @@
                                 <div class="stat-value" id="stat-avg" style="color:#2563eb;">-</div>
                             </div>
                         </div>
-                        <button class="btn-primary" style="margin-top:15px;" onclick="hitungStatistikNilai()">Refresh Analisis Nilai</button>
+                        <button class="btn-primary" style="margin-top:15px;" id="btn-refresh-stats">Refresh Analisis Nilai</button>
                     </div>
 
                     <div id="sub-settings" class="tab-content">
@@ -184,7 +184,7 @@
                                 ● Connected to Supabase Cloud Storage
                             </div>
                         </div>
-                        <button class="btn-text" style="color:#ef4444; font-weight:bold; text-align:left; padding:0;" onclick="clearMapelCache()">Reset Pilihan Mapel ke Default</button>
+                        <button class="btn-text" style="color:#ef4444; font-weight:bold; text-align:left; padding:0;" id="btn-reset-mapel">Reset Pilihan Mapel ke Default</button>
                     </div>
 
                 </div>
@@ -192,6 +192,204 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const SUPABASE_URL = "https://jtvfacdloqykdlbiariy.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0dmZhY2Rsb3F5a2RsYmlhcml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzgzNTcsImV4cCI6MjA5NjUxNDM1N30.Q-zNIS0tki5Tn37P8R6u-LPTkOCnE2r5jllMj922N2k";
+        
+        let supabase = null;
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        let loggedInUser = "";
+        const mapelWajibDefault = ["Bahasa Indonesia", "Bahasa Sunda", "Bahasa Inggris", "Matematika", "Informatika", "Biologi", "Fisika", "Sejarah", "Ekonomi", "PKWU"];
+        let listMapelSistem = JSON.parse(localStorage.getItem('siassmansala_mapel')) || mapelWajibDefault;
+
+        // Inisialisasi Event Listener setelah DOM siap sempurna
+        document.addEventListener("DOMContentLoaded", () => {
+            muatPilihanMapel();
+            muatDaftarMapelTab();
+
+            // Pasang Handler Klik Tombol Login
+            document.getElementById('tombol-masuk-sias').addEventListener('click', loginSistem);
+
+            // Pasang Handler Navigasi Tab Dashboard
+            document.getElementById('btn-tab-input').addEventListener('click', (e) => bukaTab(e, 'sub-input'));
+            document.getElementById('btn-tab-semua').addEventListener('click', (e) => { bukaTab(e, 'sub-seluruh-siswa'); muatSeluruhSiswa(); });
+            document.getElementById('btn-tab-kelas').addEventListener('click', (e) => bukaTab(e, 'sub-setiap-kelas'));
+            document.getElementById('btn-tab-mapel').addEventListener('click', (e) => bukaTab(e, 'sub-mata-pelajaran'));
+            document.getElementById('btn-tab-stats').addEventListener('click', (e) => { bukaTab(e, 'sub-nilai-stats'); hitungStatistikNilai(); });
+            document.getElementById('btn-tab-settings').addEventListener('click', (e) => bukaTab(e, 'sub-settings'));
+            document.getElementById('btn-tab-logout').addEventListener('click', logoutSistem);
+
+            // Pasang Handler Aksi Form & Fitur
+            document.getElementById('btn-simpan-cloud').addEventListener('click', simpanDataSistem);
+            document.getElementById('btn-tambah-mapel').addEventListener('click', tambahMapelKustom);
+            document.getElementById('btn-refresh-stats').addEventListener('click', hitungStatistikNilai);
+            document.getElementById('btn-reset-mapel').addEventListener('click', clearMapelCache);
+            document.getElementById('filter-kelas-dropdown').addEventListener('change', (e) => muatDataPerKelas(e.target.value));
+        });
+function loginSistem() {
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value;
+
+            if (!u || !p) {
+                Swal.fire('Peringatan', 'Username dan Password wajib diisi!', 'warning');
+                return;
+            }
+
+            if (u === 'AdminSMANSALA#' && p === 'SIAS2026-27##') {
+                loggedInUser = u;
+                Swal.fire({ title: 'Akses Diterima', text: 'Membuka dashboard internal...', icon: 'success', timer: 1000, showConfirmButton: false })
+                .then(() => {
+                    switchPanel('panel-menu');
+                    document.getElementById('menu-pengguna').value = loggedInUser;
+                });
+            } else {
+                Swal.fire('Gagal Masuk', 'Kredensial salah atau tidak terdaftar!', 'error');
+            }
+        }
+
+        function switchPanel(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            const container = document.getElementById('main-container');
+            if (id === 'panel-menu') container.classList.add('wide');
+            else container.classList.remove('wide');
+        }
+
+        function bukaTab(evt, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function muatPilihanMapel() {
+            const selectMapel = document.getElementById('menu-mapel');
+            if (!selectMapel) return;
+            selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+            listMapelSistem.forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m; opt.textContent = m;
+                selectMapel.appendChild(opt);
+            });
+        }
+
+        function muatDaftarMapelTab() {
+            const wrapper = document.getElementById('daftar-mapel-list');
+            if (!wrapper) return;
+            wrapper.innerHTML = "";
+            listMapelSistem.forEach(m => {
+                let li = document.createElement('li');
+                li.className = "mapel-item-list";
+                li.textContent = m;
+                wrapper.appendChild(li);
+            });
+        }
+
+        function tambahMapelKustom() {
+            Swal.fire({
+                title: 'Tambah Mapel',
+                input: 'text',
+                inputPlaceholder: 'Nama mata pelajaran baru...',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                inputValidator: (value) => {
+                    if (!value) return 'Tidak boleh kosong!';
+                    if (listMapelSistem.some(m => m.toLowerCase() === value.trim().toLowerCase())) return 'Mapel sudah ada!';
+                }
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    listMapelSistem.push(res.value.trim());
+                    localStorage.setItem('siassmansala_mapel', JSON.stringify(listMapelSistem));
+                    muatPilihanMapel();
+                    muatDaftarMapelTab();
+                    Swal.fire('Sukses', 'Mata pelajaran berhasil ditambahkan', 'success');
+                }
+            });
+        }
+
+        async function muatSeluruhSiswa() {
+            if (!supabase) return;
+            const tbody = document.getElementById('tabel-semua-siswa');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Mengunduh basis data cloud...</td></tr>';
+            const { data, error } = await supabase.from('data_siswa').select('*').order('id', { ascending: false });
+            if (error) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat basis data!</td></tr>'; return; }
+            if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Data siswa kosong.</td></tr>'; return; }
+            tbody.innerHTML = "";
+            data.forEach(s => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td><b>${s.nama_siswa}</b></td><td><span class="badge-kelas">${s.kelas}</span></td><td>${s.mata_pelajaran}</td><td><span class="nilai-text">${s.nilai_siswa}</span></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function muatDataPerKelas(kelasPilihan) {
+            const tbody = document.getElementById('tabel-per-kelas');
+            if (!kelasPilihan) { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Silakan pilih kelas terlebih dahulu.</td></tr>'; return; }
+            if (!supabase) return;
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Menyaring data...</td></tr>';
+            const { data, error } = await supabase.from('data_siswa').select('*').eq('kelas', kelasPilihan).order('nama_siswa', { ascending: true });
+            if (error || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Tidak ada record di kelas ${kelasPilihan}.</td></tr>`; return; }
+            tbody.innerHTML = "";
+            data.forEach(s => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td><b>${s.nama_siswa}</b></td><td>${s.mata_pelajaran}</td><td><span class="nilai-text">${s.nilai_siswa}</span></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function hitungStatistikNilai() {
+            if (!supabase) return;
+            const { data, error } = await supabase.from('data_siswa').select('nilai_siswa');
+            if (error || !data || data.length === 0) {
+                document.getElementById('stat-max').textContent = "-";
+                document.getElementById('stat-min').textContent = "-";
+                document.getElementById('stat-avg').textContent = "-";
+                return;
+            }
+            let nilaiArray = data.map(d => d.nilai_siswa);
+            document.getElementById('stat-max').textContent = Math.max(...nilaiArray);
+            document.getElementById('stat-min').textContent = Math.min(...nilaiArray);
+            document.getElementById('stat-avg').textContent = (nilaiArray.reduce((a, b) => a + b, 0) / nilaiArray.length).toFixed(1);
+        }
+
+        async function simpanDataSistem() {
+            if (!supabase) return;
+            const kelas = document.getElementById('menu-kelas').value;
+            const nama = document.getElementById('menu-nama').value.trim();
+            const mapel = document.getElementById('menu-mapel').value;
+            const nilai = document.getElementById('menu-nilai').value.trim();
+            const pengguna = document.getElementById('menu-pengguna').value;
+
+            if (!kelas || !nama || !mapel || !nilai) { Swal.fire('Gagal', 'Lengkapi seluruh baris isian formulir!', 'warning'); return; }
+            
+            Swal.fire({ title: 'Mengunggah...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            const { error } = await supabase.from('data_siswa').insert([{ kelas, nama_siswa: nama, mata_pelajaran: mapel, nilai_siswa: parseFloat(nilai), pengguna_petugas: pengguna }]);
+            Swal.close();
+
+            if (error) { Swal.fire('Gagal Sinkronisasi', error.message, 'error'); } 
+            else {
+                Swal.fire('Berhasil', 'Record data terikat aman di database.', 'success');
+                document.getElementById('menu-nama').value = "";
+                document.getElementById('menu-nilai').value = "";
+            }
+        }
+
+        function clearMapelCache() {
+            localStorage.removeItem('siassmansala_mapel');
+            listMapelSistem = mapelWajibDefault;
+            muatPilihanMapel();
+            muatDaftarMapelTab();
+            Swal.fire('Reset', 'Kategori pelajaran kembali ke awal.', 'success');
+        }
+
+        function logoutSistem() {
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            switchPanel('panel-awal');
+        }
+    </script>
 </body>
 </html>
