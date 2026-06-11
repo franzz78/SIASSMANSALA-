@@ -12,8 +12,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,9 +22,7 @@
         <div id="panel-awal" class="panel active">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 20px;">
                 <img src="https://jtvfacdloqykdlbiariy.supabase.co/storage/v1/object/sign/Logo_SMANSALA/Logo_SMANSALA./SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81NTAwOWFiNi00ODQ2LTRlNDQtYjRjMi03NjZiYjAwODkyMzkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvX1NNQU5TQUxBL0xvZ29fU01BTlNBTEEuL1NNQU5TQUxBLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODA5Nzc5MzgsImV4cCI6MTgxMjUxMzkzOH0.IXgJFY5zqaJs6RxJIU0juZI31arY7GcJyO7WwsS3CJE" 
-                     alt="Logo_SMANSALA" 
-                     style="width: 85px; height: auto; margin-bottom: 15px;">
-                
+                     alt="Logo_SMANSALA" style="width: 85px; height: auto; margin-bottom: 15px;">
                 <header style="text-align: center;">
                     <h1 class="portal-title">SIASSMANSALA</h1>
                 </header>
@@ -35,7 +31,6 @@
             <div class="instansi-box">
                 <div class="instansi-main">SMAN 1 LEMAHABANG</div>
                 <div class="instansi-sub">KABUPATEN CIREBON</div>
-                
                 <div class="running-text-container">
                     <marquee style="color: #2563eb; font-size: 11px; font-weight: bold; letter-spacing: 1px;">
                         -- SMAN 1 LEMAHABANG -- -- LA, BERPRESTASI MENUJU SEKOLAH JUARA -- -- SIASSMANSALA SYSTEM --
@@ -57,59 +52,139 @@
         </div>
 
         <div id="panel-menu" class="panel">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 15px;">
-                <img src="https://jtvfacdloqykdlbiariy.supabase.co/storage/v1/object/sign/Logo_SMANSALA/Logo_SMANSALA./SMANSALA.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81NTAwOWFiNi00ODQ2LTRlNDQtYjRjMi03NjZiYjAwODkyMzkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvX1NNQU5TQUxBL0xvZ29fU01BTlNBTEEuL1NNQU5TQUxBLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODA5Nzc5MzgsImV4cCI6MTgxMjUxMzkzOH0.IXgJFY5zqaJs6RxJIU0juZI31arY7GcJyO7WwsS3CJE" 
-                     alt="Logo SMANSALA" style="width: 55px; margin-bottom: 10px;">
+            <div class="dashboard-layout">
                 
-                <div style="text-align: center;">
-                    <h2 style="margin: 0; font-size: 18px; font-family: 'Outfit', sans-serif; color: #2563eb; font-weight: 700;">Panel Pengelolaan Data</h2>
-                    <p style="margin: 0; font-size: 12px; color: #64748b;">SMAN 1 LEMAHABANG</p>
+                <div class="sidebar-tabs">
+                    <button class="tab-link active" onclick="bukaTab(event, 'sub-input')">Input Data</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-seluruh-siswa'); muatSeluruhSiswa();">Seluruh Siswa</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-setiap-kelas')">Setiap Kelas</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-mata-pelajaran')">Mata Pelajaran</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-nilai-stats')">Menu Nilai</button>
+                    <button class="tab-link" onclick="bukaTab(event, 'sub-settings')">Settings</button>
+                    <button class="tab-link btn-logout-side" onclick="logoutSistem()">Keluar</button>
+                </div>
+
+                <div class="content-tabs">
+                    
+                    <div id="sub-input" class="tab-content active">
+                        <h3 class="section-title">Formulir Input Data</h3>
+                        <div class="form-group">
+                            <label for="menu-kelas">Menu Kelas</label>
+                            <select id="menu-kelas" class="input-field">
+                                <option value="">-- Pilih Kelas --</option>
+                                <optgroup label="Kelas X">
+                                    <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
+                                    <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
+                                </optgroup>
+                                <optgroup label="Kelas XI">
+                                    <option>XI.F1</option><option>XI.F2</option><option>XI.F3</option><option>XI.F4</option><option>XI.F5</option>
+                                    <option>XI.F6</option><option>XI.F7</option><option>XI.F8</option><option>XI.F9</option><option>XI.F10</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="menu-nama">Menu Nama Siswa</label>
+                            <input type="text" id="menu-nama" class="input-field" placeholder="Nama lengkap...">
+                        </div>
+                        <div class="form-group">
+                            <label for="menu-mapel">Menu Mata Pelajaran</label>
+                            <select id="menu-mapel" class="input-field"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="menu-nilai">Menu Nilai</label>
+                            <input type="number" id="menu-nilai" class="input-field" placeholder="0-100" min="0" max="100">
+                        </div>
+                        <button type="button" class="btn-primary" onclick="simpanDataSistem()">SIMPAN DATA</button>
+                    </div>
+
+                    <div id="sub-seluruh-siswa" class="tab-content">
+                        <h3 class="section-title">Data Seluruh Siswa</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                theme-color<thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Kelas</th>
+                                        <th>Mapel</th>
+                                        <th>Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-semua-siswa">
+                                    <tr><td colspan="4" style="text-align:center; color:#64748b;">Memuat data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="sub-setiap-kelas" class="tab-content">
+                        <h3 class="section-title">Filter Setiap Kelas</h3>
+                        <div class="form-group">
+                            <select id="filter-kelas-dropdown" class="input-field" onchange="muatDataPerKelas(this.value)">
+                                <option value="">-- Pilih Kelas untuk Dilihat --</option>
+                                <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
+                                <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
+                                <option>XI.F1</option><option>XI.F2</option><option>XI.F3</option><option>XI.F4</option><option>XI.F5</option>
+                                <option>XI.F6</option><option>XI.F7</option><option>XI.F8</option><option>XI.F9</option><option>XI.F10</option>
+                            </select>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Mapel</th>
+                                        <th>Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-per-kelas">
+                                    <tr><td colspan="3" style="text-align:center; color:#64748b;">Silakan pilih kelas terlebih dahulu.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="sub-mata-pelajaran" class="tab-content">
+                        <h3 class="section-title">Pengelolaan Mata Pelajaran</h3>
+                        <button class="btn-primary" style="padding:10px; margin-bottom:15px; font-size:12px;" onclick="tambahMapelKustom()">+ Tambah Mapel Baru</button>
+                        <ul class="list-mapel-wrapper" id="daftar-mapel-list"></ul>
+                    </div>
+
+                    <div id="sub-nilai-stats" class="tab-content">
+                        <h3 class="section-title">Analisis Rekap Nilai</h3>
+                        <div class="stats-card-grid">
+                            <div class="stat-box">
+                                <div class="stat-title">Nilai Tertinggi</div>
+                                <div class="stat-value" id="stat-max">-</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-title">Nilai Terendah</div>
+                                <div class="stat-value" id="stat-min">-</div>
+                            </div>
+                            <div class="stat-box" style="grid-column: span 2;">
+                                <div class="stat-title">Rata-Rata Nilai Sekolah</div>
+                                <div class="stat-value" id="stat-avg" style="color:#2563eb;">-</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="margin-top:15px;" onclick="hitungStatistikNilai()">Refresh Analisis Nilai</button>
+                    </div>
+
+                    <div id="sub-settings" class="tab-content">
+                        <h3 class="section-title">Pengaturan Sistem</h3>
+                        <div class="form-group">
+                            <label>Petugas Aktif</label>
+                            <input type="text" id="menu-pengguna" class="input-field" readonly style="background:#e2e8f0; color:#475569;">
+                        </div>
+                        <div class="form-group">
+                            <label>Status Server Database</label>
+                            <div style="font-size:13px; font-weight:bold; color:#16a34a; padding:10px; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0;">
+                                ● Connected to Supabase Cloud Storage
+                            </div>
+                        </div>
+                        <button class="btn-text" style="color:#ef4444; font-weight:bold;" onclick="clearMapelCache()">Reset Pilihan Mapel ke Default</button>
+                    </div>
+
                 </div>
             </div>
-
-            <hr style="border: 0; height: 1px; background: #e2e8f0; margin-bottom: 20px; width: 100%;">
-
-            <div class="form-group">
-                <label for="menu-kelas">Menu Kelas</label>
-                <select id="menu-kelas" class="input-field">
-                    <option value="">-- Pilih Kelas --</option>
-                    <optgroup label="Kelas X">
-                        <option>X.1</option><option>X.2</option><option>X.3</option><option>X.4</option><option>X.5</option>
-                        <option>X.6</option><option>X.7</option><option>X.8</option><option>X.9</option><option>X.10</option>
-                    </optgroup>
-                    <optgroup label="Kelas XI">
-                        <option>XI.F1</option><option>XI.F2</option><option>XI.F3</option><option>XI.F4</option><option>XI.F5</option>
-                        <option>XI.F6</option><option>XI.F7</option><option>XI.F8</option><option>XI.F9</option><option>XI.F10</option>
-                    </optgroup>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="menu-nama">Menu Nama Siswa</label>
-                <input type="text" id="menu-nama" class="input-field" placeholder="Masukkan nama lengkap siswa...">
-            </div>
-
-            <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <label for="menu-mapel" style="margin-bottom: 0;">Menu Mata Pelajaran</label>
-                    <span onclick="tambahMapelKustom()" style="font-size: 11px; color: #2563eb; font-weight: bold; cursor: pointer; text-decoration: underline;">+ Tambah Mapel</span>
-                </div>
-                <select id="menu-mapel" class="input-field">
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="menu-nilai">Menu Nilai</label>
-                <input type="number" id="menu-nilai" class="input-field" placeholder="Masukkan rentang nilai (0-100)..." min="0" max="100">
-            </div>
-
-            <div class="form-group">
-                <label for="menu-pengguna">Menu Pengguna (Petugas/Role)</label>
-                <input type="text" id="menu-pengguna" class="input-field" readonly style="background: #e2e8f0; color: #475569; font-weight: 600;">
-            </div>
-
-            <button type="button" class="btn-primary" onclick="simpanDataSistem()">SIMPAN DATA</button>
-            <button type="button" class="btn-text" onclick="logoutSistem()">Keluar / Log Out</button>
         </div>
     </div>
 
